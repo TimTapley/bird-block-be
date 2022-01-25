@@ -8,12 +8,14 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 
-const UserProfileWritePost = () => {
+const UserProfileWritePost = (props) => {
 
     const [common, setCommon] = useState(null)
     const [binomial, setBinomial] = useState(null)
     const [date, setDate] = useState(null)
     const [where, setWhere] = useState(null)
+    const [user, setUser] = useState(null);
+    const [shouldUpdatePosts, setShouldUpdatePosts] = useState(props.shouldUpdatePosts)
 
     const auth = useAuth()
 
@@ -54,7 +56,38 @@ const UserProfileWritePost = () => {
             setWhere(where)
         }
 
-        auth.userProfileNewPost(auth.user.id, common, binomial, date, where)
+        const userProfileNewPost = (userId, common, binomial, date, where) => {
+            console.log(userId, common, binomial, date, where)
+            if (common === '' || binomial === ''  || date === '' || where === '') return;
+            axios.post(`http://localhost:8000/userProfileWritePost`, {
+                userId: userId,
+                common: common,
+                binomial: binomial,
+                date: date,
+                where: where
+            }).then(response => {
+                if (response.data.success) {
+                    return response.data.data
+                    setShouldUpdatePosts(true)
+                }
+            }).then( async (user) => {
+                console.log(user.access_token);
+                let profileResponse = await axios.get(`http://localhost:8000/myProfile`, {
+                    headers: { Authorization: `Bearer ${user.access_token}` }
+
+                }).then(response => {
+                    let userData = {
+                        posts: response.data.posts,
+                        ...user
+                    }
+                    setUser(userData)
+                }).then(()=>{
+                    navigate('/myProfile')
+                })
+            })
+        };
+
+        userProfileNewPost(props.userId, common, binomial, date, where)
 
 
     }

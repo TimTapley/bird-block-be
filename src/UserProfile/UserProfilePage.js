@@ -11,7 +11,7 @@ import CreateNewPostButton from "./CreateNewPostButton";
 
 
 
-function UserProfilePage() {
+function UserProfilePage(shouldUpdatePosts, setShouldUpdatePosts) {
     const auth = useAuth()
 
     useEffect(()=>{
@@ -55,7 +55,7 @@ function UserProfilePage() {
             <Stack direction="row" spacing={4} justifyContent='center' sx={{mb: 10}}>
               <CreateNewPostButton />
             </Stack >
-            <UserPosts posts={auth.user}/>
+            <UserPosts posts={auth.user} shouldUpdatePosts={shouldUpdatePosts} setShouldUpdatePosts={setShouldUpdatePosts}/>
         </ThemeProvider>
     )
 }

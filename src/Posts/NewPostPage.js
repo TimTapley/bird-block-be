@@ -8,7 +8,7 @@ import UserProfileWritePost from "./UserProfileWritePost";
 import NewPostHeader from "./NewPostHeader";
 
 
-function NewPostPage() {
+function NewPostPage(props) {
     const auth = useAuth()
 
     useEffect(()=>{
@@ -49,7 +49,7 @@ function NewPostPage() {
             }}>
                 <UserProfileUsername username={auth.user}/>
             </Container>
-            <UserProfileWritePost />
+            <UserProfileWritePost userId={auth.user.id} shouldUpdatePosts={props.shouldUpdatePosts} setShouldUpdatePosts={props.setShouldUpdatePosts}/>
         </ThemeProvider>
     )
 }
