@@ -11,6 +11,7 @@ const SignUpForm = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [bio, setBio] = useState('')
+    const [isNotValid, setIsNotValid] = useState(true)
 
     const auth = useAuth()
     function htmlEntities(str) {
@@ -19,7 +20,7 @@ const SignUpForm = () => {
 
     function ValidateEmail(mail)
     {
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
+        if (/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/.test(mail))
         {
             return (true)
         }
@@ -51,36 +52,37 @@ const SignUpForm = () => {
     const handleSubmit = (e) => {
         console.log('A email was submitted: ' + username + password + bio + email);
         e.preventDefault();
+        setIsNotValid(false)
         if (!ValidateEmail(email) || email.length === 0) {
             document.getElementById("emailError").textContent = 'Invalid email address'
+            setIsNotValid(true)
         } else {
             document.getElementById("emailError").textContent = ''
             setEmail(email)
         }
         if (username.length > 20 || username.length === 0){
             document.getElementById("usernameError").textContent = 'Input a username less than 21 characters'
+            setIsNotValid(true)
         } else {
             document.getElementById("usernameError").textContent = ''
             setUsername(htmlEntities(username))
         }
         if (password.length < 8 || password.length === 0 ){
             document.getElementById("passwordError").textContent = 'Input a password that is at least 8 characters'
+            setIsNotValid(true)
         } else {
             document.getElementById("passwordError").textContent = ''
             setPassword(htmlEntities(password))
         }
         if (bio.length > 500){
             document.getElementById("bioError").textContent = 'Bio can not be more than 500 characters'
+            setIsNotValid(true)
         } else {
             document.getElementById("bioError").textContent = ''
             setBio(htmlEntities(bio))
         }
-
-        if (password !== ""
-            && username !== ""
-            && email !== "") {
-            auth.signup(username,bio,email,password)
-        }
+         console.log(auth.signup(username, bio, email, password))
+         !isNotValid && auth.signup(username, bio, email, password)
 
     }
 
@@ -94,7 +96,7 @@ const SignUpForm = () => {
                     <TextField type="text" value={username} onChange={handleUsernameChange} id="filled-basic" label="Username (max 20 chars)"
                                variant="filled" sx={{bgcolor: 'whitey.main', borderRadius: '4px', width: '50vw'}} />
                     <FormHelperText id="usernameError"></FormHelperText>
-                    <TextField type="text" value={password} onChange={handlePasswordChange} id="filled-basic" label="Password (min 8 chars)"
+                    <TextField type="password" value={password} onChange={handlePasswordChange} id="filled-basic" label="Password (min 8 chars)"
                                variant="filled" sx={{bgcolor: 'whitey.main', borderRadius: '4px', width: '50vw'}} />
                     <FormHelperText id="passwordError"></FormHelperText>
                     <TextField type="text" value={bio} onChange={handleBioChange} id="filled-textarea"

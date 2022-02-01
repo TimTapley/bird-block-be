@@ -1,4 +1,4 @@
-import { useState, useContext, createContext } from 'react';
+import {useState, useContext, createContext } from 'react';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
@@ -30,38 +30,12 @@ function useProvideAuth() {
             if (response.data.success) {
                 setUser(response.data.data);
                 navigate('/myProfile')
+            } else {
+                return response
             }
         })
-    };
 
-    // const userProfileNewPost = (userId, common, binomial, date, where) => {
-    //     console.log(userId, common, binomial, date, where)
-    //     if (common === '' || binomial === ''  || date === '' || where === '') return;
-    //     axios.post(`http://localhost:8000/userProfileWritePost`, {
-    //         userId: userId,
-    //         common: common,
-    //         binomial: binomial,
-    //         date: date,
-    //         where: where
-    //     }).then(response => {
-    //         if (response.data.success) {
-    //             return response.data.data
-    //             console.log(response)
-    //         }
-    //     }).then( async (user) => {
-    //         let profileResponse = await axios.get(`http://localhost:8000/myProfile`, {
-    //             headers: { Authorization: `Bearer ${user.access_token}` }
-    //         }).then(response => {
-    //             let userData = {
-    //                 posts: response.data.posts,
-    //                 ...user
-    //             }
-    //             setUser(userData)
-    //         }).then(()=>{
-    //             navigate('/myProfile')
-    //         })
-    //     })
-    // };
+    };
 
     const signin = async (email, password) => {
         if (email === '' || password === '') return;
@@ -99,6 +73,5 @@ function useProvideAuth() {
         signup,
         signin,
         signout,
-        // userProfileNewPost,
     };
 }

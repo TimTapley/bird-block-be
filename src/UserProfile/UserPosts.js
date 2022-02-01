@@ -29,8 +29,8 @@ function UserPosts(props) {
 
         return (
             <>
-                {postsFromDB != null &&
-                    postsFromDB.map(post => <UserPostConstruction content={post}/>)
+                {postsFromDB && postsFromDB.posts != null &&
+                    postsFromDB.posts.map(post => <UserPostConstruction content={post}/>)
                 }
             </>
         )
